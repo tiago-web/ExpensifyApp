@@ -1,16 +1,27 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import ExpenseListItem from "./ExpenseListItem";
+import selectExpenses from "../selectors/expenses";
 
-const ExpenseList = props => {
-	const expenses = useSelector(state => state.expenses);
+const ExpenseList = () => {
+	const expenses = useSelector(state =>
+		selectExpenses(state.expenses, state.filters)
+	);
 
-	return <div>{expenses.length}</div>;
+	return (
+		<div>
+			<h1>Expense List</h1>
+			{expenses.map(({ id, description, amount, createdAt }, index) => (
+				<ExpenseListItem
+					key={index}
+					id={id}
+					description={description}
+					amount={amount}
+					createdAt={createdAt}
+				/>
+			))}
+		</div>
+	);
 };
-
-// const ConnectedExpenseList = connect(state => {
-// 	return {
-// 		expenses: state.expenses,
-// 	};
-// })(ExpenseList);
 
 export default ExpenseList;

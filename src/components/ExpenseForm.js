@@ -1,10 +1,17 @@
 import React, { useState } from "react";
+import "react-dates/initialize";
+import { SingleDatePicker } from "react-dates";
+import moment from "moment";
+import "react-dates/lib/css/_datepicker.css";
 
-const ExpenseForm = () => {
+const ExpenseForm = props => {
 	const [state, setState] = useState({
 		description: "",
 		note: "",
 		amount: "",
+		createdAt: moment(),
+		calendarFocused: false,
+		error: "",
 	});
 
 	const handleChange = e => {
@@ -16,7 +23,7 @@ const ExpenseForm = () => {
 				[name]: value,
 			}));
 		} else {
-			if (value.match(/^\d*(\.\d{0,2})?$/)) {
+			if (!value || value.match(/^\d{1,}(\.\d{0,2})?$/)) {
 				setState(prevState => ({
 					...prevState,
 					[name]: value,
@@ -25,9 +32,45 @@ const ExpenseForm = () => {
 		}
 	};
 
+	const onDateChange = createdAt => {
+		if (createdAt) {
+			setState(prevState => ({
+				...prevState,
+				createdAt,
+			}));
+		}
+	};
+
+	const onFocusChange = ({ focused }) => {
+		setState(prevState => ({ ...prevState, calendarFocused: focused }));
+	};
+
+	const onSubmit = e => {
+		if (!state.description || !state.amount) {
+			// Set error state equal to "Please provide description and amount."
+			setState(prevState => ({
+				...prevState,
+				error: "Please provide description and amount.",
+			}));
+		} else {
+			// Clear error
+			setState(prevState => ({ ...prevState, error: "" }));
+
+			props.onSubmit({
+				description: state.description,
+				amount: parseFloat(state.amount, 10) * 100,
+				createdAt: state.createdAt.valueOf(),
+				note: state.note,
+			});
+		}
+
+		e.preventDefault();
+	};
+
 	return (
 		<div>
-			<form>
+			{!!state.error && <p>{state.error}</p>}
+			<form onSubmit={onSubmit}>
 				<input
 					type="text"
 					placeholder="Description"
@@ -42,6 +85,14 @@ const ExpenseForm = () => {
 					value={state.amount}
 					name="amount"
 					onChange={handleChange}
+				/>
+				<SingleDatePicker
+					date={state.createdAt}
+					onDateChange={onDateChange}
+					focused={state.calendarFocused}
+					onFocusChange={onFocusChange}
+					numberOfMonths={1}
+					isOutsideRange={() => false}
 				/>
 				<textarea
 					placeholder="Add a note for your expense (optional)"

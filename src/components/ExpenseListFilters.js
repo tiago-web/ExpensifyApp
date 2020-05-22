@@ -9,17 +9,18 @@ const ExpenseListFilters = () => {
 	const handleSort = e => {
 		const { value } = e.target;
 
-		value === "date" ? dispatch(sortByDate()) : dispatch(sortByAmount());
+		if (value === "date") dispatch(sortByDate());
+		else if (value === "amount") dispatch(sortByAmount());
 	};
 
 	return (
 		<div>
 			<input
 				type="text"
-				defaultValue={filters.text}
+				value={filters.text}
 				onChange={e => dispatch(setTextFilter(e.target.value))}
 			/>
-			<select onChange={handleSort}>
+			<select value={filters.sortBy} onChange={handleSort}>
 				<option value="date">Date</option>
 				<option value="amount">Amount</option>
 			</select>

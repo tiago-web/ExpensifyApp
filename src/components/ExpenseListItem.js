@@ -1,6 +1,6 @@
 import React from "react";
-import { removeExpense } from "../actions/expenses";
 import { useDispatch } from "react-redux";
+import { removeExpense } from "../actions/expenses";
 
 export default function ExpenseListItem(props) {
 	const dispatch = useDispatch();

@@ -6,10 +6,10 @@ import "react-dates/lib/css/_datepicker.css";
 
 const ExpenseForm = props => {
 	const [state, setState] = useState({
-		description: "",
-		note: "",
-		amount: "",
-		createdAt: moment(),
+		description: props.expense ? props.expense.description : "",
+		note: props.expense ? props.expense.note : "",
+		amount: props.expense ? (props.expense.amount / 100).toString() : "",
+		createdAt: props.expense ? moment(props.expense.createdAt) : moment(),
 		calendarFocused: false,
 		error: "",
 	});

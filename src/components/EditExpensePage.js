@@ -1,16 +1,34 @@
 import React from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams, useHistory } from "react-router-dom";
+import { editExpense, removeExpense } from "../actions/expenses";
+import ExpenseForm from "./ExpenseForm";
 
 export default function EditExpensePage(props) {
-	let location = useLocation();
-	let { id } = useParams();
-
-	console.log(location);
-	console.log(id);
+	const dispatch = useDispatch();
+	const history = useHistory();
+	const { id } = useParams();
+	const expense = useSelector(state =>
+		state.expenses.find(expense => expense.id === id)
+	);
 
 	return (
 		<div>
-			<h1>EditExpensePage</h1>
+			<ExpenseForm
+				expense={expense}
+				onSubmit={expense => {
+					dispatch(editExpense(id, expense));
+					history.push("/");
+				}}
+			/>
+			<button
+				onClick={() => {
+					dispatch(removeExpense(id));
+					history.push("/");
+				}}
+			>
+				Remove
+			</button>
 		</div>
 	);
 }

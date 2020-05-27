@@ -16,15 +16,15 @@ import { addExpense } from "../actions/expenses";
 
 const store = configureStore();
 
-store.dispatch(
-	addExpense({ description: "Water bill", amount: 1000, createdAt: 2000 })
-);
-store.dispatch(
-	addExpense({ description: "Gas bill", amount: 800, createdAt: 3000 })
-);
-store.dispatch(
-	addExpense({ description: "Rent", amount: 10800, createdAt: 2300 })
-);
+// store.dispatch(
+// 	addExpense({ description: "Water bill", amount: 1000, createdAt: 2000 })
+// );
+// store.dispatch(
+// 	addExpense({ description: "Gas bill", amount: 800, createdAt: 3000 })
+// );
+// store.dispatch(
+// 	addExpense({ description: "Rent", amount: 10800, createdAt: 2300 })
+// );
 
 function App() {
 	return (

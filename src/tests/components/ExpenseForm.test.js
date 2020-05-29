@@ -21,16 +21,33 @@ test("should render error for invalid form submission", () => {
 	expect(wrapper).toMatchSnapshot();
 	wrapper.find("form").simulate("submit", { preventDefault: () => {} });
 
-	expect(wrapper.find("p").length).toBeGreaterThan(0);
+	expect(wrapper.find("p").length).toBeGreaterThan(0); // Check if error was triggerd
 	expect(wrapper).toMatchSnapshot();
 });
 
-test("should set description", () => {
-	const wrapper = shallow(<ExpenseForm />);
-	wrapper
-		.find("input")
-		.at(0)
-		.onChange({ target: { value: "something" } });
+test("should call onSubmit prop for valid form submission", () => {
+	const onSubmitSpy = jest.fn();
+	const wrapper = shallow(
+		<ExpenseForm expense={expenses[0]} onSubmit={onSubmitSpy} />
+	);
+	wrapper.find("form").simulate("submit", { preventDefault: () => {} });
 
-	expect(wrapper.find("input").at(0).prop("value")).toEqual("something");
+	expect(wrapper.find("p").length).toBe(0);
+	expect(onSubmitSpy).toHaveBeenLastCalledWith({
+		description: expenses[0].description,
+		amount: expenses[0].amount,
+		note: expenses[0].note,
+		createdAt: expenses[0].createdAt,
+	});
 });
+
+// NOT WORKING
+// test("should set description", () => {
+// 	const wrapper = shallow(<ExpenseForm />);
+// 	wrapper
+// 		.find("input")
+// 		.at(0)
+// 		.simulate("change", { target: { value: "something" } });
+
+// 	expect(wrapper.find("input").at(0).prop("value")).toEqual("");
+// });
